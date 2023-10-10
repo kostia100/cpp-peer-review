@@ -7,9 +7,7 @@ using namespace std;
 
 class EBook {
 public:
-
-    EBook() : users_(0), users_to_page(100'001) , page_to_users(1001){
-
+    EBook() : users_(0), users_to_page(max_users_) , page_to_users(max_pages_){
     }
 
     void UpdateUserData(int user_id , int page_number) {
@@ -29,64 +27,59 @@ public:
                 page_to_users[page]++;
             }
         }
-
-       
-     }
+    }
 
     double CheerUser(int user_id) {
-
         int pages = users_to_page[user_id];  
         if (pages == 0) {
             return 0.0;
         }
         int reads = page_to_users[pages];
-
         if (reads == 1) {
             return 1;
         }
-
         int no_reads = users_ - reads;
-
+        if (users_ == 1) {
+            throw std::logic_error("Trying to divide by zero");
+        }
         return (no_reads )/((users_-1) *1.0);
     }
 
-private:
+    void ReadEBook(istream& input, ostream& output) {
+        int q;
+        input >> q;
+        int j = 1;
+        while (j <= q) {
+            string message;
+            input >> message;
+            if (message == "READ") {
+                int user_id;
+                int page_number;
+                input >> user_id >> page_number;
+                this->UpdateUserData(user_id, page_number);
+                ++j;
+            }
+            else if (message == "CHEER") {
+                int user_id;
+                input >> user_id;
+                output << setprecision(6) << this->CheerUser(user_id) << endl;
+                ++j;
+            }
+        }
+    }
 
+private:
     int users_;
     vector<int> users_to_page;
     vector<int> page_to_users;
-
-
+    static const int max_users_ = 100'001;
+    static const int max_pages_ = 1001;
 };
 
-void ReadEBook(EBook& book,istream& input, ostream& output ) {
-    int q;
-    input >> q;
-    int j = 1;
-    while (j <= q) {
-        string message;
-        input >> message;
-        if (message == "READ") {
-            int user_id;
-            int page_number;
-            input >> user_id >> page_number;
-            book.UpdateUserData(user_id, page_number);
-            ++j;
 
-        }
-        else if (message == "CHEER") {
-            int user_id;
-            input >> user_id;
-            output << setprecision(6) << book.CheerUser(user_id) << endl;
-            ++j;
-        }
-    }
-}
 
 int main()
 {
     EBook book;
-    ReadEBook(book,cin,cout);
-
+    book.ReadEBook(cin,cout);
 }
-
