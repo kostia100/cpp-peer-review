@@ -15,7 +15,7 @@ public:
     // разработайте класс домена
 
     // конструктор должен позволять конструирование из string, с сигнатурой определитесь сами
-    Domain(string domain) : domain_(domain) {
+    Domain(const string& domain) : domain_(domain) {
         reverse(domain_.begin(),domain_.end());
     }
 
@@ -156,13 +156,13 @@ void TestDomainEquality() {
 }
 
 void TestDomainCheckerConstructor() {
-    const std::vector<Domain> forbidden_domains{ {"b.a"} , {"z.b.a"} , {"uuu.z.b.a"} , {"cc.b.a"} };
+    const vector<Domain> forbidden_domains{ {"b.a"} , {"z.b.a"} , {"uuu.z.b.a"} , {"cc.b.a"} };
     DomainChecker checker(forbidden_domains.begin(), forbidden_domains.end());
     assert(checker.CheckedDomainsNmb() == 1);
 }
 
 void TestDomainChecker() {
-    const std::vector<Domain> forbidden_domains{ {"gdz.ru"} , {"maps.me"} , {"m.gdz.ru"} , {"com"} };
+    const vector<Domain> forbidden_domains{ {"gdz.ru"} , {"maps.me"} , {"m.gdz.ru"} , {"com"} };
     DomainChecker checker(forbidden_domains.begin(), forbidden_domains.end());
     assert(checker.IsForbidden({ "gdz.ru" }));
     assert(checker.IsForbidden({ "gdz.com" }));
@@ -209,10 +209,10 @@ void UnitTests() {
 int main() {
     UnitTests();
     
-    const std::vector<Domain> forbidden_domains = ReadDomains(cin, ReadNumberOnLine<size_t>(cin));
+    const vector<Domain> forbidden_domains = ReadDomains(cin, ReadNumberOnLine<size_t>(cin));
     DomainChecker checker(forbidden_domains.begin(), forbidden_domains.end());
 
-    const std::vector<Domain> test_domains = ReadDomains(cin, ReadNumberOnLine<size_t>(cin));
+    const vector<Domain> test_domains = ReadDomains(cin, ReadNumberOnLine<size_t>(cin));
     for (const Domain& domain : test_domains) {
         cout << (checker.IsForbidden(domain) ? "Bad"sv : "Good"sv) << endl;
     }   
