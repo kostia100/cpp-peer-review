@@ -54,7 +54,7 @@ public:
     }
 
     FilterBuilder& SetMaxAge(int max_age) {
-        max_age = max_age_;
+        max_age_ = max_age;
     }
 
     FilterBuilder& SetFilterNameAge(std::string_view name_fileter) {
